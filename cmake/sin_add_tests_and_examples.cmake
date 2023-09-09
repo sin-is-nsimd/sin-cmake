@@ -37,25 +37,29 @@ else()
 endif()
 
 
-### @brief Adds some C++ tests.
+### @brief Adds some C++ and C tests.
 ###
-### The C++ tests are added. All `${DIRECTORY}/*.cpp` files are consired as tests.
+### The C++ and C tests are added. All `${DIRECTORY}/*.cpp` and
+### `${DIRECTORY}/*.c` files are consired as tests.
 ###
-### @param "DIRECTORY <directory>" Directory which contains the C++ tests (`tests` by default).
-### @param "BINARY_PREFIX <prefix>" Binary prefix (`${PARENT_DIRECTORY}_test` by default).
-### @param "TYPE <type>" Type of the test (e.g. `test` or `example`); used only for display.
+### @param "DIRECTORY <directory>" Directory which contains the C++ and C tests
+###                                (`tests` by default).
+### @param "TYPE <type>" Type of the test (e.g. `test` or `example`); used only
+###                      for display.
+### @param "BINARY_PREFIX <prefix>" Binary prefix
+###                                 (`${PARENT_DIRECTORY}_${TYPE}` by default).
 ### @param "LINK_LIBRARIES <lib>..." Link tests with these libraries.
-### @param "USE_GTEST" Tests use GoogleTest. With this option, tests link with gtest and the C++
-###                    define `GTEST_SUITE_NAME` is set.
 ### @param "ADD_VALGRIND" Tests run by `valgrind` are also added.
+### @param "USE_GTEST" Tests use GoogleTest. With this option, tests link with
+###                    `gtest` and the define `GTEST_SUITE_NAME` is set.
 ###
 ### **Example:**
 ### TODO
 ###
-### @ingroup sin_cmake_library
+### @ingroup sin_cmake_test
 function(sin_add_tests)
   # Args
-  set(options USE_GTEST ADD_VALGRIND)
+  set(options ADD_VALGRIND USE_GTEST)
   set(oneValueArgs DIRECTORY BINARY_PREFIX TYPE)
   set(multiValueArgs LINK_LIBRARIES)
   cmake_parse_arguments(SIN_ADD_TESTS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -68,15 +72,6 @@ function(sin_add_tests)
     endif()
   get_filename_component(tests_directory_absolute "${tests_directory}" ABSOLUTE)
 
-  # Binary prefix
-  if(SIN_ADD_TESTS_BINARY_PREFIX)
-    set(binary_prefix "${SIN_ADD_TESTS_BINARY_PREFIX}")
-  else()
-    get_filename_component(tests_parent_directory_absolute "${tests_directory_absolute}" DIRECTORY)
-    get_filename_component(tests_parent_directory "${tests_parent_directory_absolute}" NAME)
-    set(binary_prefix "${tests_parent_directory}_test")
-  endif()
-
   # Type
   if(SIN_ADD_TESTS_TYPE)
     set(type "${SIN_ADD_TESTS_TYPE}")
@@ -84,8 +79,17 @@ function(sin_add_tests)
     set(type "test")
   endif()
 
+  # Binary prefix
+  if(SIN_ADD_TESTS_BINARY_PREFIX)
+    set(binary_prefix "${SIN_ADD_TESTS_BINARY_PREFIX}")
+  else()
+    get_filename_component(tests_parent_directory_absolute "${tests_directory_absolute}" DIRECTORY)
+    get_filename_component(tests_parent_directory "${tests_parent_directory_absolute}" NAME)
+    set(binary_prefix "${tests_parent_directory}_${type}")
+  endif()
+
   # Get all the tests
-  file(GLOB_RECURSE tests "${tests_directory_absolute}/*.cpp")
+  file(GLOB_RECURSE tests "${tests_directory_absolute}/*.cpp" "${tests_directory_absolute}/*.c")
 
   # For each test
   message(STATUS "Add ${type}s from ${tests_directory}")
@@ -95,6 +99,7 @@ function(sin_add_tests)
     string(REPLACE "${tests_directory_absolute}" "${binary_prefix}" test_name "${test_name}")
     string(REPLACE "/" "_" test_name "${test_name}")
     string(REPLACE ".cpp" "" test_name "${test_name}")
+    string(REPLACE ".c" "" test_name "${test_name}")
 
     # Test
     message(STATUS "- add ${type} ${test_name}")
@@ -124,24 +129,25 @@ function(sin_add_tests)
   endforeach()
 endfunction()
 
-### @brief Adds some C++ examples.
+### @brief Adds some C++ and C examples.
 ###
-### The C++ examples are added. All `examples/*.cpp` files are consired as examples.
+### The C++ and C examples are added. All `examples/*.cpp` and `examples/*.c`
+### files are consired as examples.
 ### This function uses `sin_add_tests` function.
 ###
-### @param "ADD_VALGRIND" Tests run by `valgrind` are also added.
+### @param "BINARY_PREFIX <prefix>" Binary prefix
+###                                 (`${PARENT_DIRECTORY}_example` by default).
+### @param "LINK_LIBRARIES <lib>..." Link examples with these libraries.
+### @param "ADD_VALGRIND" Examples run by `valgrind` are also added.
 ###
 ### **Example:**
 ### TODO
 ###
 ### @ingroup sin_cmake_library
 function(sin_add_examples)
-  # Args
-  set(options ADD_VALGRIND)
-  cmake_parse_arguments(EXTP_ADD_TESTS "${options}" "" "" ${ARGN})
-
   # Add examples
   sin_add_tests(
     DIRECTORY "examples"
-    TYPE "example")
+    TYPE "example"
+    ${ARGN})
 endfunction()
