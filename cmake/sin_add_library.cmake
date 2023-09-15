@@ -23,13 +23,14 @@
 ### 
 ### Library target.
 
-### @brief Adds a C++ library.
+### @brief Adds a C++ or a C library.
 ###
-### The C++ library in `include/*.hpp` and `src/*.cpp` is added.
+### The C++ or the C library is added. The header files are `include/*.hpp` and
+### `include/*.h`. The source files are `src/*.cpp` and `src/*.c`.
 ###
 ### @param library_target CMake target.
-### @param "DIRECTORY <directory>" Directory which contains `include/*.hpp` and `src/*.cpp` (empty
-###                                by default).
+### @param "DIRECTORY <directory>" Directory which contains `include/*.h[pp]`
+###                                and `src/*.c[pp]` (empty by default).
 ### @param "EXTRA_HEADERS <path>..." Extra header files.
 ### @param "EXTRA_SOURCES <path>..." Extra source files.
 ###
@@ -49,7 +50,7 @@ function(sin_add_library library_target)
   endif()
 
   # Sources
-  file(GLOB_RECURSE ${library_target}_headers "${library_directory}include/*.hpp")
+  file(GLOB_RECURSE ${library_target}_headers "${library_directory}include/*.hpp" "${library_directory}include/*.h")
   file(GLOB_RECURSE ${library_target}_sources "${library_directory}src/*.cpp" "${library_directory}src/*.c")
 
   # Extra headers and sources
