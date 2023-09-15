@@ -34,6 +34,11 @@
 ### @param "EXTRA_HEADERS <path>..." Extra header files.
 ### @param "EXTRA_SOURCES <path>..." Extra source files.
 ###
+### @output "${library_target}_headers" contains the header files of the library
+###                                     without the given extra header files.
+### @output "${library_target}_sources" contains the source files of the library
+###                                     without the given extra source files.
+###
 ### **Example:**
 ### TODO
 ###
@@ -52,6 +57,8 @@ function(sin_add_library library_target)
   # Sources
   file(GLOB_RECURSE ${library_target}_headers "${library_directory}include/*.hpp" "${library_directory}include/*.h")
   file(GLOB_RECURSE ${library_target}_sources "${library_directory}src/*.cpp" "${library_directory}src/*.c")
+  set(${library_target}_headers "${${library_target}_headers}" PARENT_SCOPE)
+  set(${library_target}_sources "${${library_target}_sources}" PARENT_SCOPE)
 
   # Extra headers and sources
   list(APPEND ${library_target}_headers "${SIN_ADD_LIBRARY_EXTRA_HEADERS}")
