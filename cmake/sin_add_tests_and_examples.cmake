@@ -48,6 +48,7 @@ endif()
 ###                      for display.
 ### @param "BINARY_PREFIX <prefix>" Binary prefix
 ###                                 (`${PARENT_DIRECTORY}_${TYPE}` by default).
+### @param "INCLUDE_DIRECTORIES <dir>..." Include these directories.
 ### @param "LINK_LIBRARIES <lib>..." Link tests with these libraries.
 ### @param "ADD_VALGRIND" Tests run by `valgrind` are also added.
 ### @param "USE_GTEST" Tests use GoogleTest. With this option, tests link with
@@ -61,7 +62,7 @@ function(sin_add_tests)
   # Args
   set(options ADD_VALGRIND USE_GTEST)
   set(oneValueArgs DIRECTORY BINARY_PREFIX TYPE)
-  set(multiValueArgs LINK_LIBRARIES)
+  set(multiValueArgs LINK_LIBRARIES INCLUDE_DIRECTORIES)
   cmake_parse_arguments(SIN_ADD_TESTS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
   # Tests directory
@@ -104,6 +105,7 @@ function(sin_add_tests)
     # Test
     message(STATUS "- add ${type} ${test_name}")
     add_executable(${test_name} "${test}")
+    target_include_directories(${test_name} PRIVATE ${SIN_ADD_TESTS_INCLUDE_DIRECTORIES})
     if(SIN_ADD_TESTS_USE_GTEST)
       target_compile_definitions(${test_name} PRIVATE GTEST_SUITE_NAME=${TestSuiteName})
       target_link_libraries(${test_name} PRIVATE gtest ${SIN_ADD_TESTS_LINK_LIBRARIES})
@@ -137,6 +139,7 @@ endfunction()
 ###
 ### @param "BINARY_PREFIX <prefix>" Binary prefix
 ###                                 (`${PARENT_DIRECTORY}_example` by default).
+### @param "INCLUDE_DIRECTORIES <dir>..." Include these directories.
 ### @param "LINK_LIBRARIES <lib>..." Link examples with these libraries.
 ### @param "ADD_VALGRIND" Examples run by `valgrind` are also added.
 ###
