@@ -122,11 +122,12 @@ function(sin_add_tests)
 
     # Valgrind
     if(SIN_ADD_TESTS_ADD_VALGRIND AND VALGRIND_EXE)
-      add_test(
-        NAME "${test_name}_valgrind"
-        COMMAND ${CMAKE_COMMAND} -E env "EXECUTED_BY_VALGRIND=1"
-          "${VALGRIND_EXE}" "--error-exitcode=255" "--leak-check=full"
-          "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${test_name}")
+        add_test(
+          NAME "${test_name}_valgrind"
+          COMMAND ${CMAKE_COMMAND} -E env "EXECUTED_BY_VALGRIND=1"
+            "${VALGRIND_EXE}" "--error-exitcode=255" "--leak-check=full"
+            "./${test_name}"
+          WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
     endif()
   endforeach()
 endfunction()
