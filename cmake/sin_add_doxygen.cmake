@@ -25,7 +25,7 @@
 
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
-  message(STATUS "Doxygen found")
+  message(STATUS "Doxygen found: ${DOXYGEN}")
 else()
   message(STATUS "Doxygen not found")
 endif()

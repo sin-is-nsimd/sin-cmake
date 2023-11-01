@@ -21,8 +21,8 @@
 
 cmake_minimum_required(VERSION 3.25)
 project(sin-cmake
-  VERSION 23.08.13
-  DESCRIPTION "CMake helpers for C++ projects")
+  VERSION 23.11.01
+  DESCRIPTION "CMake helpers for C and C++ projects")
 
 include(cmake/sin_add_doxygen.cmake)
 
