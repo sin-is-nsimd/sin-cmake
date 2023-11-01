@@ -19,8 +19,14 @@
 # SOFTWARE.
 
 
-include("${CMAKE_CURRENT_LIST_DIR}/./sin_add_doxygen.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/./sin_add_library.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/./sin_add_python.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/./sin_add_tests_and_examples.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/./sin_set_compiler_flags.cmake")
+### @defgroup sin_cmake_python Python.
+### 
+### Python.
+
+find_package(Python3)
+if(PYTHON3_FOUND)
+  set(PYTHON3 "${Python3_EXECUTABLE}")
+  message(STATUS "Python3 found: ${PYTHON3}")
+else()
+  message(STATUS "Python3 not found")
+endif()
