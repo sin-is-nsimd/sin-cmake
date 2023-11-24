@@ -23,9 +23,11 @@
 ### 
 ### Compiler flags.
 
-# Possible `CMAKE_CXX_COMPILER_ID`: Clang, GNU, Intel, MSVC
+# Possible `CMAKE_CXX_COMPILER_ID`: AppleClang, Clang, GNU, Intel, MSVC
 # https://stackoverflow.com/a/10055571
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang"
+ OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang"
+ OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   set(sin_compiler_flags_family "gcc")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
   # TODO
