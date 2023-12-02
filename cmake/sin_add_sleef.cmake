@@ -1,4 +1,4 @@
-# Copyright © 2023 Lénaïc Bagnères
+# Copyright © 2023 Rodolphe Cargnello
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -19,14 +19,13 @@
 # SOFTWARE.
 
 
-### @defgroup sin_cmake_python Python.
+### @defgroup sin_cmake_sleef sleef.
 ### 
-### Python.
+### sleef documentation.
 
-find_package(Python3)
-if(PYTHON3_FOUND)
-  set(PYTHON3 "${Python3_EXECUTABLE}")
-  message(STATUS "Python3 found: ${PYTHON3}")
+find_package(sleef)
+if(SLEEF_FOUND)
+	message(STATUS "sleef found: ${SLEEF}")
 else()
-	message(FATAL_ERROR "Python3 not found")
+	message(FATAL_ERROR "sleef not found")
 endif()

@@ -113,6 +113,8 @@ function(sin_add_tests)
       target_link_libraries(${test_name} PRIVATE ${SIN_ADD_TESTS_LINK_LIBRARIES})
     endif()
 
+    target_link_libraries(${test_name} PRIVATE sleef ${SIN_ADD_TESTS_LINK_LIBRARIES})
+
     # Add test
     if (SIN_ADD_TESTS_USE_GTEST)
       gtest_discover_tests(${test_name})
