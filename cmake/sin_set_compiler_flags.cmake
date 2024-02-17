@@ -1,4 +1,4 @@
-# Copyright © 2023 Lénaïc Bagnères
+# Copyright © 2023-2024 Lénaïc Bagnères
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,10 @@
 
 # Possible `CMAKE_CXX_COMPILER_ID`: AppleClang, Clang, GNU, Intel, MSVC
 # https://stackoverflow.com/a/10055571
-if (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang"
- OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang"
- OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang" OR
+    CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+ set(sin_compiler_flags_family "clang")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   set(sin_compiler_flags_family "gcc")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
   # TODO
@@ -35,26 +36,32 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   set(sin_compiler_flags_family "msvc")
 endif()
 
+set(sin_clang_flag_sse2 -msse2)
 set(sin_gcc_flag_sse2 -msse2)
 set(sin_msvc_flag_sse2 /DSSE2 /arch:SSE2)
 set(sin_flag_sse2 "${sin_${sin_compiler_flags_family}_flag_sse2}")
 
+set(sin_clang_flag_sse42 -msse4.2)
 set(sin_gcc_flag_sse42 -msse4.2)
 set(sin_msvc_flag_sse42 /DSSE42 /arch:SSE42)
 set(sin_flag_sse42 "${sin_${sin_compiler_flags_family}_flag_sse42}")
 
+set(sin_clang_flag_avx -mavx)
 set(sin_gcc_flag_avx -mavx -mno-avx256-split-unaligned-load -mno-avx256-split-unaligned-store)
 set(sin_msvc_flag_avx /DAVX /arch:AVX)
 set(sin_flag_avx "${sin_${sin_compiler_flags_family}_flag_avx}")
 
+set(sin_clang_flag_avx2 -mavx2 -mfma)
 set(sin_gcc_flag_avx2 -mavx2 -mfma -mno-avx256-split-unaligned-load -mno-avx256-split-unaligned-store)
 set(sin_msvc_flag_avx2 /DAVX2 /arch:AVX2)
 set(sin_flag_avx2 ${sin_${sin_compiler_flags_family}_flag_avx2})
 
+set(sin_clang_flag_avx512_knl -mavx512f -mavx512pf -mavx512er -mavx512cd)
 set(sin_gcc_flag_avx512_knl -mavx512f -mavx512pf -mavx512er -mavx512cd)
 set(sin_msvc_flag_avx512_knl /DAVX512_KNL /arch:AVX512)
 set(sin_flag_avx512_knl ${sin_${sin_compiler_flags_family}_flag_avx512_knl})
 
+set(sin_clang_flag_avx512_skylake -mavx512f -mavx512dq -mavx512cd -mavx512bw -mavx512vl)
 set(sin_gcc_flag_avx512_skylake -mavx512f -mavx512dq -mavx512cd -mavx512bw -mavx512vl)
 set(sin_msvc_flag_avx512_skylake /DAVX512_SKYLAKE /arch:AVX512)
 set(sin_flag_avx512_skylake ${sin_${sin_compiler_flags_family}_flag_avx512_skylake})
