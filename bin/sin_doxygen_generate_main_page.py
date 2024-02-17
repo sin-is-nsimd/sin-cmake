@@ -27,7 +27,10 @@ if __name__ == "__main__":
 
     if len(sys.argv) != 5:
         print(
-            'Usage:', sys.argv[0], '<Readme.md> <output> <project_name> <project_version>')
+            "Usage:",
+            sys.argv[0],
+            "<Readme.md> <output> <project_name> <project_version>",
+        )
         sys.exit(1)
 
     readme_path = sys.argv[1]
@@ -35,12 +38,12 @@ if __name__ == "__main__":
     project_name = sys.argv[3]
     project_version = sys.argv[4]
 
-    with open(readme_path, 'r') as f:
+    with open(readme_path, "r") as f:
         readme_lines = f.readlines()
 
-    with open(output_path, 'w') as f:
-        f.write('/** \mainpage ' + project_name + ' ' + project_version + '\n')
-        f.write(' *\n')
-        f.write(''.join([' * ' + line for line in readme_lines]))
-        f.write(' *\n')
-        f.write(' */\n')
+    with open(output_path, "w") as f:
+        f.write("/** \mainpage " + project_name + " " + project_version + "\n")
+        f.write(" *\n")
+        f.write("".join([" * " + line for line in readme_lines]))
+        f.write(" *\n")
+        f.write(" */\n")

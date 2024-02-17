@@ -30,10 +30,15 @@ import sys
 
 
 def parse_function(line):
-    if line.startswith('function('):
+    if line.startswith("function("):
         function_name_and_args = line[9:-2].split()
-        print('void ' + function_name_and_args[0] +
-              '(' + ', '.join(function_name_and_args[1:]) + ') {')
+        print(
+            "void "
+            + function_name_and_args[0]
+            + "("
+            + ", ".join(function_name_and_args[1:])
+            + ") {"
+        )
         return True
     return False
 
@@ -41,21 +46,20 @@ def parse_function(line):
 def filter(cmake_filename):
     with open(cmake_filename) as f:
         for line in f:
-            if line.startswith('###'):
-                print('///' + line[3:], end='')
+            if line.startswith("###"):
+                print("///" + line[3:], end="")
             elif parse_function(line):
                 continue
-            elif line.startswith('endfunction()'):
-                print('}')
+            elif line.startswith("endfunction()"):
+                print("}")
             else:
-                print('//', line, end='')
+                print("//", line, end="")
 
 
 if __name__ == "__main__":
 
     if len(sys.argv) != 2:
-        print(
-            'Usage:', sys.argv[0], '<input>')
+        print("Usage:", sys.argv[0], "<input>")
         sys.exit(1)
 
     filter(sys.argv[1])

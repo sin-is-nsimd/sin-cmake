@@ -5,9 +5,32 @@
 CMake has bad reputation but it is widely use for C and C++ projects. We want to believe it is
 possible to have simple CMake for our projects or projects with the same folders structures.
 
+Project uses [conventional-pre-commit]<https://github.com/compilerla/conventional-pre-commit> to try to force good commit messages.
+The `.pre-commit-config.yaml` is already in the root folder of `nsimd`.
+Run this command in the `nsimd` directory:
+```sh
+pre-commit install --hook-type commit-msg
+```
+
+Project uses [black]<https://pypi.org/project/black/> as Python 3 code
+formatter.
+
+# Development
+
+Project uses [conventional-pre-commit]<https://github.com/compilerla/conventional-pre-commit>
+to try to force good commit messages.
+The `.pre-commit-config.yaml` is already in the root folder of `sin-cmake`.
+Run this command in the `sin-cmake` directory:
+```sh
+pre-commit install --hook-type commit-msg
+```
+
+Project uses [black]<https://pypi.org/project/black/> as Python 3 code
+formatter.
+
 # License
 
-Copyright © 2023 <https://github.com/sin-is-nsimd>
+Copyright © 2023-2024 <https://github.com/sin-is-nsimd>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
