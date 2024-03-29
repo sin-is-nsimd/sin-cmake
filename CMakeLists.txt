@@ -19,11 +19,13 @@
 # SOFTWARE.
 
 
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.13.4)
 project(sin-cmake
-  VERSION 23.11.01
+  VERSION 24.03.29
   DESCRIPTION "CMake helpers for C and C++ projects")
 
 include(cmake/sin_add_doxygen.cmake)
 
-sin_add_doxygen(sin_cmake_doxygen INPUTS "cmake" OUTPUT "./sin_cmake_doxygen")
+sin_add_doxygen(sin_cmake_doxygen
+                INPUTS "cmake" OUTPUT "./sin_cmake_doxygen"
+                CUSTOM_LANGUAGE "cmake")
