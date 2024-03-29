@@ -37,6 +37,8 @@ endif()
 ### @param doxygen_target CMake target.
 ### @param "OUTPUT <ouput>" Ouput directory.
 ### @param "INPUTS <input>..." Input directories.
+### @param "CUSTOM_LANGUAGE <language>" Language filter (optional).
+###                                     Possible value: cmake
 ###
 ### **Example:**
 ### @include CMakeLists.txt
@@ -45,7 +47,7 @@ endif()
 function(sin_add_doxygen doxygen_target)
   if(DOXYGEN_FOUND)
     # Args
-    set(oneValueArgs OUTPUT)
+    set(oneValueArgs OUTPUT CUSTOM_LANGUAGE)
     set(multiValueArgs INPUTS)
     cmake_parse_arguments(SIN_ADD_DOXYGEN "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
@@ -75,10 +77,12 @@ function(sin_add_doxygen doxygen_target)
     set(DOXYGEN_SORT_MEMBER_DOCS "NO")
     set(DOXYGEN_EXTRACT_PRIVATE "YES")
 
-    # Filter for CMake
-    set(DOXYGEN_FILE_PATTERNS "*.cmake")
-    set(DOXYGEN_EXTENSION_MAPPING "cmake=C")
-    set(DOXYGEN_FILTER_PATTERNS "*.cmake=${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../bin/sin_doxygen_filter_cmake.py")
+    # Language / Filter for CMake
+    if ("${SIN_ADD_DOXYGEN_CUSTOM_LANGUAGE}" STREQUAL "cmake")
+      set(DOXYGEN_FILE_PATTERNS "*.cmake")
+      set(DOXYGEN_EXTENSION_MAPPING "cmake=C")
+      set(DOXYGEN_FILTER_PATTERNS "*.cmake=${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../bin/sin_doxygen_filter_cmake.py")
+    endif()
 
     # Generate html
     set(DOXYGEN_OUTPUT_DIRECTORY ${SIN_ADD_DOXYGEN_OUTPUT})
