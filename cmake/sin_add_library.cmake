@@ -33,6 +33,7 @@
 ###                                and `src/*.c[pp]` (empty by default).
 ### @param "EXTRA_HEADERS <path>..." Extra header files.
 ### @param "EXTRA_SOURCES <path>..." Extra source files.
+### @param STATIC To build a static library (shared by default).
 ###
 ### @output "${library_target}_headers" contains the header files of the library
 ###                                     without the given extra header files.
@@ -45,9 +46,10 @@
 ### @ingroup sin_cmake_library
 function(sin_add_library library_target)
   # Args
+  set(optionArgs STATIC SHARED)
   set(oneValueArgs DIRECTORY)
   set(multiValueArgs EXTRA_HEADERS EXTRA_SOURCES)
-  cmake_parse_arguments(SIN_ADD_LIBRARY "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+  cmake_parse_arguments(SIN_ADD_LIBRARY "${optionArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
   # Library directory
   if(SIN_ADD_LIBRARY_DIRECTORY)
@@ -64,9 +66,16 @@ function(sin_add_library library_target)
   list(APPEND ${library_target}_headers "${SIN_ADD_LIBRARY_EXTRA_HEADERS}")
   list(APPEND ${library_target}_sources "${SIN_ADD_LIBRARY_EXTRA_SOURCES}")
 
+  # Library type (shared or static)
+  if(SIN_ADD_LIBRARY_STATIC)
+    set(library_type STATIC)
+  else()
+    set(library_type SHARED)
+  endif()
+
   # Library
-  message(STATUS "Add library ${library_target}")
-  add_library(${library_target} SHARED ${${library_target}_headers} ${${library_target}_sources})
+  message(STATUS "Add ${library_type} library ${library_target}")
+  add_library(${library_target} ${library_type} ${${library_target}_headers} ${${library_target}_sources})
   set_property(TARGET ${library_target} PROPERTY POSITION_INDEPENDENT_CODE ON)
   target_include_directories(${library_target} BEFORE PUBLIC "${library_directory}include")
 endfunction()
