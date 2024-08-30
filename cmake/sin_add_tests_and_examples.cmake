@@ -1,4 +1,4 @@
-# Copyright © 2023 Lénaïc Bagnères
+# Copyright © 2023-2024 Lénaïc Bagnères
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -115,7 +115,7 @@ function(sin_add_tests)
 
     # Add test
     if (SIN_ADD_TESTS_USE_GTEST)
-      gtest_discover_tests(${test_name})
+      gtest_discover_tests(${test_name} DISCOVERY_TIMEOUT 60)
     else()
       add_test(NAME "${test_name}" COMMAND "${test_name}")
     endif()
