@@ -1,4 +1,4 @@
-# Copyright © 2023-2024 Lénaïc Bagnères
+# Copyright © 2023-2025 Lénaïc Bagnères
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,7 @@ set(sin_flag_sse2 "${sin_${sin_compiler_flags_family}_flag_sse2}")
 
 set(sin_clang_flag_sse42 -msse4.2)
 set(sin_gcc_flag_sse42 -msse4.2)
-set(sin_msvc_flag_sse42 /DSSE42 /arch:SSE42)
+set(sin_msvc_flag_sse42 /DSSE42 /arch:SSE4.2)
 set(sin_flag_sse42 "${sin_${sin_compiler_flags_family}_flag_sse42}")
 
 set(sin_clang_flag_avx -mavx)
