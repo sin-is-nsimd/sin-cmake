@@ -30,8 +30,8 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang" OR
  set(sin_compiler_flags_family "clang")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   set(sin_compiler_flags_family "gcc")
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-  # TODO
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM")
+  set(sin_compiler_flags_family "clang")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   set(sin_compiler_flags_family "msvc")
 endif()
