@@ -105,6 +105,7 @@ function(sin_add_tests)
     # Test
     message(STATUS "- add ${type} ${test_name}")
     add_executable(${test_name} "${test}")
+    add_sycl_to_target(TARGET ${test_name} SOURCES "${test}")
     target_include_directories(${test_name} PRIVATE ${SIN_ADD_TESTS_INCLUDE_DIRECTORIES})
     if(SIN_ADD_TESTS_USE_GTEST)
       target_compile_definitions(${test_name} PRIVATE GTEST_SUITE_NAME=${TestSuiteName})
