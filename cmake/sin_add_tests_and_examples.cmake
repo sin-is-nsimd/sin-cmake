@@ -53,6 +53,10 @@ endif()
 ### @param "ADD_VALGRIND" Tests run by `valgrind` are also added.
 ### @param "USE_GTEST" Tests use GoogleTest. With this option, tests link with
 ###                    `gtest` and the define `GTEST_SUITE_NAME` is set.
+### @param "COVERAGE_TARGET <target>" CMake target name to generate the code
+###                                   coverage.
+### @param "COVERAGE_LANG <lang>" Language of the tests, needed for coverage.
+###                               Possible values are "C" or "CXX".
 ###
 ### **Example:**
 ### TODO
@@ -61,7 +65,7 @@ endif()
 function(sin_add_tests)
   # Args
   set(options ADD_VALGRIND USE_GTEST)
-  set(oneValueArgs DIRECTORY BINARY_PREFIX TYPE)
+  set(oneValueArgs DIRECTORY BINARY_PREFIX TYPE COVERAGE_TARGET COVERAGE_LANG)
   set(multiValueArgs LINK_LIBRARIES INCLUDE_DIRECTORIES)
   cmake_parse_arguments(SIN_ADD_TESTS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
@@ -89,11 +93,24 @@ function(sin_add_tests)
     set(binary_prefix "${tests_parent_directory}_${type}")
   endif()
 
+  # Coverage target
+  if(SIN_ADD_TESTS_COVERAGE_TARGET)
+    add_custom_target(${SIN_ADD_TESTS_COVERAGE_TARGET})
+  endif()
+
+  # Coverage lang
+  if(SIN_ADD_TESTS_COVERAGE_TARGET)
+    if(NOT DEFINED SIN_ADD_TESTS_COVERAGE_LANG OR (NOT SIN_ADD_TESTS_COVERAGE_LANG STREQUAL "C" AND NOT SIN_ADD_TESTS_COVERAGE_LANG STREQUAL "CXX"))
+      message(WARNING "sin_add_tests from \"${tests_directory}\" directory: COVERAGE_LANG argument is required, possible values are \"C\" or \"CXX\", \"CXX\" will be used.")
+      set(SIN_ADD_TESTS_COVERAGE_LANG "CXX")
+    endif()
+  endif()
+
   # Get all the tests
   file(GLOB_RECURSE tests "${tests_directory_absolute}/*.cpp" "${tests_directory_absolute}/*.c")
 
   # For each test
-  message(STATUS "Add ${type}s from ${tests_directory}")
+  message(STATUS "Add ${type}s from \"${tests_directory}\" directory")
   foreach(test ${tests})
     # Compute test_name
     set(test_name "${test}")
@@ -113,11 +130,28 @@ function(sin_add_tests)
       target_link_libraries(${test_name} PRIVATE ${SIN_ADD_TESTS_LINK_LIBRARIES})
     endif()
 
+    # Add coverage
+    if (SIN_ADD_TESTS_COVERAGE_TARGET)
+      # Coverage for this test
+      sin_add_coverage(${SIN_ADD_TESTS_COVERAGE_TARGET}_${test_name} TARGET ${test_name} LANG "CXX" OUTPUT "./${SIN_ADD_TESTS_COVERAGE_TARGET}/${test_name}")
+      # Add LLVM_PROFILE_FILE environment variable
+      # %p will be replaced by the process ID by LLVM coverage tooling, it allows to run the tests in parallel
+      if (CMAKE_${SIN_ADD_TESTS_COVERAGE_LANG}_COMPILER_ID MATCHES "Clang")
+        set(coverage_env_var "LLVM_PROFILE_FILE=${SIN_ADD_TESTS_COVERAGE_TARGET}_${test_name}-%p.profraw")
+      endif()
+      # Coverage sub-target
+      add_dependencies(${SIN_ADD_TESTS_COVERAGE_TARGET} ${SIN_ADD_TESTS_COVERAGE_TARGET}_${test_name})
+    endif()
+
     # Add test
     if (SIN_ADD_TESTS_USE_GTEST)
-      gtest_discover_tests(${test_name} DISCOVERY_TIMEOUT 60)
+      gtest_discover_tests(
+        ${test_name}
+        DISCOVERY_TIMEOUT 60
+        PROPERTIES ENVIRONMENT "${coverage_env_var}")
     else()
       add_test(NAME "${test_name}" COMMAND "${test_name}")
+      set_tests_properties(${test_name} PROPERTIES ENVIRONMENT "${coverage_env_var}")
     endif()
 
     # Valgrind
